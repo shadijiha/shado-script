@@ -1,10 +1,10 @@
 // This is a comment
 
-void Update()   {
-    //CppFunctioefaen();
-    CppFunction(1, 156);
-}
 
 void Setup()    {
+    CreatePlagtform(2, 3);
+}
 
+void Update()   {
+    CreatePlfatform(2, 3);
 }

@@ -6,6 +6,10 @@
 #include <vector>
 #include <unordered_map>
 
+#define RETURN_VOID std::make_any<int>(0);
+#define TO_NUMBER(X) std::any_cast<double>(X)
+#define TO_STRING(X) std::any_cast<std::string>(X)
+
 namespace Shado {
 	class VM final {
 		using Function = std::function<std::any(std::vector<std::any>)>;

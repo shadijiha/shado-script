@@ -12,7 +12,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "shado-script"
 	location "shado-script"
-	kind "ConsoleApp"
+	kind "StaticLib"
 	language "C++"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -54,4 +54,4 @@ project "shado-script"
 
 	filter "configurations:Dist"
 		defines "SHADO_DIST"
-		optimize "On"
+		optimize "Full"

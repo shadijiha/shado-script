@@ -1,0 +1,19 @@
+#include <chrono>
+#include <iostream>
+#include "ShadoScript.h"
+
+std::any CreatePlatform(std::vector<std::any> args) {
+	std::cout << "Platform created at " << TO_NUMBER(args[0]) << ", " << TO_NUMBER(args[1]) << std::endl;
+	return RETURN_VOID;
+}
+
+int main() {
+	using namespace Shado;
+	VM& vm = LoadScriptFile("hello.sscript");
+
+	vm.DefineFunc("CreatePlatform", &CreatePlatform);
+	// Function here
+	vm.Call("Update", {});
+
+	
+}
