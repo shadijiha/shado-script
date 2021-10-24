@@ -8,7 +8,7 @@ workspace "shado-script"
 		"Dist"
 	}
 
-outputdir = "%{cfg.buildcfg}-${cfg.system}-${cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 project "shado-script"
 	location "shado-script"

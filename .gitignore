@@ -8,3 +8,4 @@ bin
 *.cache
 *.db
 .vs
+bin-int
