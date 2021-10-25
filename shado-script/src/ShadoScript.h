@@ -4,6 +4,6 @@
 namespace Shado {
 	using namespace Shado;
 	
-	VM& LoadScriptFile(const std::string& filename);
-	
+	VM& FromScriptFile(const std::string& filename);
+	VM& FromCode(const std::string& code);
 }

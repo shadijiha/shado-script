@@ -15,14 +15,10 @@ namespace Shado {
 	static bool IsNumber(const std::string& s);
 	static bool IsComment(const std::string& line);
 	
-	Parser::Parser(const std::string& filename)
+	Parser::Parser(const std::string& content)
 	{
 		vm = new VM();
-		
-		// Read the file
-		std::ifstream ifs(filename);
-		std::string content((std::istreambuf_iterator<char>(ifs)),
-			(std::istreambuf_iterator<char>()));
+
 
 		// Parse text
 		std::unordered_map<std::string, std::string> funcBlocks;
@@ -103,12 +99,26 @@ namespace Shado {
 		}
 	}
 
-	VM& LoadScriptFile(const std::string& filename) {
-		Parser* parser = new Parser(filename);
+	VM& FromScriptFile(const std::string& filename) {
+		// Read the file
+		std::ifstream ifs(filename);
+		std::string content((std::istreambuf_iterator<char>(ifs)),
+			(std::istreambuf_iterator<char>()));
+		
+		Parser* parser = new Parser(content);
 		
 		VM* res = parser->GetVM();
 		//delete parser;
 		
+		return *res;
+	}
+
+	VM& FromCode(const std::string& code) {	
+		Parser* parser = new Parser(code);
+
+		VM* res = parser->GetVM();
+		//delete parser;
+
 		return *res;
 	}
 	

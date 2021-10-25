@@ -22,7 +22,7 @@ namespace Shado {
 		void DefineFunc(const std::string& name, Function func);
 		void DefineGlobalVar(const std::string& name, std::any value);
 
-		std::any Call(const std::string& name, const std::vector<std::any>& args);
+		std::any Call(const std::string& name, const std::vector<std::any>& args = {});
 		
 		static std::shared_ptr<VM> Create();
 
