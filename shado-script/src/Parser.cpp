@@ -19,7 +19,6 @@ namespace Shado {
 	{
 		vm = new VM();
 
-
 		// Parse text
 		std::unordered_map<std::string, std::string> funcBlocks;
 		auto lines = Split(content, "\n");
