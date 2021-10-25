@@ -12,18 +12,20 @@
 
 namespace Shado {
 	class VM final {
-		using Function = std::function<std::any(std::vector<std::any>)>;
-		
 	public:
+		using Function = std::function<std::any(const std::vector<std::any>&)>;
+
 		VM();
 		VM(const VM&) = delete;
 		~VM();
-		
-		void DefineFunc(const std::string& name, Function func);
+
+		void DefineFunc(const std::string& name, const Function& func);
 		void DefineGlobalVar(const std::string& name, std::any value);
 
 		std::any Call(const std::string& name, const std::vector<std::any>& args = {});
-		
+
+		const std::unordered_map<std::string, Function>& GetFunctions() const;
+
 		static std::shared_ptr<VM> Create();
 
 	private:

@@ -3,7 +3,8 @@
 
 namespace Shado {
 	using namespace Shado;
-	
-	VM& FromScriptFile(const std::string& filename);
-	VM& FromCode(const std::string& code);
+
+	std::shared_ptr<VM> FromScriptFile(const std::string& filename);
+	std::shared_ptr<VM> FromCode(const std::string& code);
+
 }

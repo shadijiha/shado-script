@@ -2,9 +2,9 @@
 
 
 void Setup()    {
-    CreatePlagtform(2, 3);
+    CreatePlatform(2);
 }
 
 void Update()   {
-    CreatePlfatform(2, 3);
+    println(3);
 }

@@ -1,0 +1,5 @@
+FUNC	print
+FUNC	Setup
+FUNC	println
+FUNC	inspect_vm
+FUNC	Update

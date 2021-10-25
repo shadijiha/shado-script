@@ -5,6 +5,7 @@
 #include <regex>
 #include <stack>
 #include <sstream>
+#include <memory>
 
 namespace Shado {
 	static std::vector<std::string> Split(const std::string& str, const std::string& regex);
@@ -14,10 +15,10 @@ namespace Shado {
 	static void trim(std::string& s);
 	static bool IsNumber(const std::string& s);
 	static bool IsComment(const std::string& line);
-	
+
 	Parser::Parser(const std::string& content)
 	{
-		vm = new VM();
+		vm = std::make_shared<VM>();
 
 		// Parse text
 		std::unordered_map<std::string, std::string> funcBlocks;
@@ -27,7 +28,8 @@ namespace Shado {
 			if (IsComment(line)) {
 				goto NextIt;
 			}
-			
+
+			trim(line);
 			if (Matches(line, "\\w+\\s+\\w+\\(.*\\)\\s*.*")) {
 				std::string block = ExtractFunction(SubString(lines, lineNum + 1));
 
@@ -36,8 +38,8 @@ namespace Shado {
 				funcBlocks[name] = block;
 			}
 
-			NextIt:
-				lineNum++;
+		NextIt:
+			lineNum++;
 		}
 
 		// Convert code blocks to function code
@@ -46,7 +48,7 @@ namespace Shado {
 			std::vector<std::string> funcLines = Split(func_block.second, "\n");
 
 			std::vector<std::function<void()>> nativeCodeLines;
-			
+
 			for (const auto& line : funcLines) {
 
 				std::string trimmedLine = line;
@@ -55,7 +57,7 @@ namespace Shado {
 				if (IsComment(line)) {
 					continue;
 				}
-				
+
 				// Function call
 				if (Matches(trimmedLine, "\\w+(.*)")) {
 					// Extract the callee name
@@ -68,7 +70,7 @@ namespace Shado {
 						rawArgs.replace(semiColPos, 1, "");
 
 					auto splittedArgs = Split(rawArgs, ",");
-					
+
 					std::vector<std::any> parssedArgs;
 					for (auto& arg : splittedArgs) {
 						trim(arg);
@@ -79,10 +81,10 @@ namespace Shado {
 					}
 
 					// convert function to C++
-					VM* wrapper = this->vm;
+					std::shared_ptr<VM> wrapper = this->vm;
 					nativeCodeLines.emplace_back([wrapper, callee, parssedArgs]() {
 						wrapper->Call(callee, parssedArgs);
-					});
+						});
 				}
 			}
 
@@ -94,48 +96,25 @@ namespace Shado {
 				}
 
 				return std::make_any<int>(0);
-			});
+				});
 		}
 	}
 
-	VM& FromScriptFile(const std::string& filename) {
-		// Read the file
-		std::ifstream ifs(filename);
-		std::string content((std::istreambuf_iterator<char>(ifs)),
-			(std::istreambuf_iterator<char>()));
-		
-		Parser* parser = new Parser(content);
-		
-		VM* res = parser->GetVM();
-		//delete parser;
-		
-		return *res;
-	}
-
-	VM& FromCode(const std::string& code) {	
-		Parser* parser = new Parser(code);
-
-		VM* res = parser->GetVM();
-		//delete parser;
-
-		return *res;
-	}
-	
 	static std::string ExtractFunction(const std::string& block) {
 		std::stack<char> stack;
 		std::stringstream buffer;
-		
+
 		stack.push('}');
-		
+
 		for (const char& c : block) {
 			if (c == '{')
 				stack.push('{');
 			else if (c == '}') {
-				
+
 				stack.pop();
-				if (stack.empty()) 
+				if (stack.empty())
 					return buffer.str();
-				
+
 			}
 
 			buffer << c;
@@ -149,9 +128,9 @@ namespace Shado {
 			rgx,
 			-1);
 		std::sregex_token_iterator end;
-		
+
 		std::vector<std::string> result;
-		
+
 		for (; iter != end; ++iter)
 			result.push_back(*iter);
 

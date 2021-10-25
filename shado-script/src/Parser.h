@@ -8,10 +8,10 @@ namespace Shado {
 	public:
 		Parser(const std::string& filename);
 
-		VM* GetVM() { return vm; }
-		
+		std::shared_ptr<VM> GetVM() { return vm; }
+
 	private:
-		VM* vm;
+		std::shared_ptr<VM> vm;
 		int lineNum = 0;
 	};
 }
