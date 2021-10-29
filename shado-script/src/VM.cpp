@@ -35,6 +35,9 @@ namespace Shado {
 	}
 
 	VM::~VM() {
+		for (auto* vec : toClearnUp) {
+			delete vec;
+		}
 	}
 
 	void VM::DefineFunc(const std::string& name, const Function& func) {
@@ -45,10 +48,36 @@ namespace Shado {
 		globalVariables[name] = value;
 	}
 
+	bool VM::FuncExists(const std::string& name) {
+		return functions.find(name) != functions.end();
+	}
+
+	bool VM::GlobalVarExists(const std::string& name) {
+		return globalVariables.find(name) != globalVariables.end();
+	}
+
+	const std::any& VM::GetVar(const std::string& name) {
+
+		if (!GlobalVarExists(name)) {
+
+#if !SHADO_DIST
+			using namespace std::string_literals;
+			std::cout << "Global variable \""s + name + "\" is not defined" << std::endl;
+#endif
+
+#if SHADO_DEBUG
+			__debugbreak();
+#else
+			return std::make_any<int>(0);
+#endif
+		}
+		return globalVariables[name];
+	}
+
 	std::any VM::Call(const std::string& name, const std::vector<std::any>& args) {
 		using namespace std::literals::string_literals;
 
-		if (functions.find(name) == functions.end()) {
+		if (!FuncExists(name)) {
 
 #if !SHADO_DIST
 			std::cout << "Function \""s + name + "\" is not defined" << std::endl;
@@ -70,6 +99,10 @@ namespace Shado {
 
 	std::shared_ptr<VM> VM::Create() {
 		return std::make_shared<VM>();
+	}
+
+	void VM::AddCleanUp(std::vector<std::any>* argVector) {
+		this->toClearnUp.push_back(argVector);
 	}
 
 }
